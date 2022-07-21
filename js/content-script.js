@@ -12,6 +12,12 @@ window.onload = function () {
 };
 
 /**
+ * Notes:
+ * The most used ones
+ * 1- Walmart address to Pirateship address
+ * 2- Amazon address to dropship.domyown.com + diypestcontrol.com + Pestrong + Pedchem
+ *
+ *
  * Sites to copy the data from:
  * seller.walmart.com
  * sellercentral.amazon.com
@@ -21,8 +27,8 @@ window.onload = function () {
  * diypestcontrol.com
  * dropship.domyown.com
  * ship.pirateship.com
- * ww.pestrong.com
- * ww.pedchem.com
+ * www.pestrong.com
+ * www.pedchem.com
  * */
 
 // Main Function
@@ -73,9 +79,10 @@ async function init() {
         let address2Bundle = fullAddress[2];
         // split numbers and letters in separate arrays
         let zip = address2Bundle.split(/[^0-9]/);
-        zip = `${zip[zip.length - 1]}-${zip[zip.length - 2]}`;
+        zip = `${zip[zip.length - 2]}`;
         let state = address2Bundle.split(/[^a-zA-Z]/);
-        state = state[2];
+        console.log("preState:", state);
+        state = state[2] === "" ? state[3] : state[2];
         address2Bundle = address2Bundle.split(",");
         let city = address2Bundle[0];
         // let state = address2Bundle[1].split(" ")[0];
@@ -91,24 +98,187 @@ async function init() {
         if (window.location.hostname === "www.pestcontrolwholesale.com") {
           console.log("at pestcontrol");
           sleep(2000);
+
           let fullAddress =
             document.getElementsByClassName("address")[1].innerText;
-          fullAddress = fullAddress.split(`\n`);
-          let fullName = fullAddress[0];
-          let address2 = fullAddress[1];
-          let address = fullAddress[2];
-          let addressBundle = fullAddress[3];
-          let city = addressBundle.split(",")[0];
-          let state = addressBundle.split(",")[1].split(" ")[1];
-          let zip = addressBundle.split(",")[1].split(" ")[2];
-          console.log("fullName", fullName);
-          console.log("address", address);
-          console.log("address2", address2);
-          console.log("city", city);
-          console.log("state", state);
-          console.log("zip", zip);
+
+          fullAddress = fullAddress ? fullAddress.split(`\n`) : [];
+          console.log("fullAddress", fullAddress);
+          let fullName, address2, address, addressBundle;
+          if (fullAddress.length === 4) {
+            fullName = fullAddress[0];
+            address2 = fullAddress[1];
+            address = fullAddress[2];
+            addressBundle = fullAddress[3];
+          } else {
+            fullName = fullAddress[0];
+            address = fullAddress[1];
+            addressBundle = fullAddress[2];
+          }
+          console.log("addressBundle", addressBundle);
+          try {
+            let city = addressBundle.split(",")[0];
+
+            let state = addressBundle.split(",")[1].split(" ")[1];
+            let zip = addressBundle.split(",")[1].split(" ")[2];
+            console.log("fullName", fullName);
+            console.log("address", address);
+            console.log("address2", address2);
+            console.log("city", city);
+            console.log("state", state);
+            console.log("zip", zip);
+          } catch (error) {
+            console.log("I'm probably on the wrong page");
+          }
         }
 
+        break;
+      }
+      case "dropship.domyown.com": {
+        console.log("at dropship");
+        sleep(2000);
+        try {
+          let fullName = "John Jensen";
+          let address = "6603 N IL ROUTE 2";
+          let address2 = "OREGON, IL 61061-9327";
+          let city = "OREGON";
+          let state = "Illinois";
+          let zip = "61061-9327";
+          zip = zip.split("-")[0];
+          document.getElementsByName("delivery_name")[0].value = fullName;
+          document.getElementsByName("delivery_street_address")[0].value =
+            address;
+          document.getElementsByName("delivery_street_address_2")[0].value =
+            address2;
+
+          document.getElementsByName("delivery_city")[0].value = city;
+          let deliveryState = document.getElementsByName("delivery_state")[0];
+          document.getElementsByName("delivery_postcode")[0].value = zip;
+
+          if (deliveryState) {
+            for (let i = 0; i < deliveryState.options.length; i++) {
+              if (deliveryState.options[i].text.includes(state)) {
+                deliveryState.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        } catch (error) {
+          console.log("Problem in dropship", error);
+        }
+        break;
+      }
+      case "diypestcontrol.com": {
+        console.log("at diypestcontrol");
+        sleep(2000);
+        try {
+          let fullName = "John Jensen";
+          let firstName = fullName.split(" ")[0];
+          let lastName = fullName.split(" ")[1];
+          let address = "6603 N IL ROUTE 2";
+          let address2 = "OREGON, IL 61061-9327";
+          let city = "OREGON";
+          let state = "Armed Forces Canada";
+          let zip = "61061-9327";
+          zip = zip.split("-")[0];
+          document.getElementById("firstname").value = firstName;
+          document.getElementById("lastname").value = lastName;
+          document.getElementById("street_1").value = address;
+          document.getElementById("street_2").value = address2;
+
+          document.getElementById("city").value = city;
+          sleep(2000);
+
+          let deliveryState = document.getElementsByName("region_id")[0];
+          document.getElementById("zip").value = zip;
+
+          if (deliveryState) {
+            for (let i = 0; i < deliveryState.options.length; i++) {
+              console.log("state: ", state);
+              if (deliveryState.options[i].text.includes(state)) {
+                deliveryState.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        } catch (error) {
+          console.log("Problem in diypestcontrol", error);
+        }
+        break;
+      }
+      case "www.pestrong.com": {
+        console.log("at peststrong");
+        sleep(2000);
+        try {
+          let fullName = "John Jensen";
+          let firstName = fullName.split(" ")[0];
+          let lastName = fullName.split(" ")[1];
+          let address = "6603 N IL ROUTE 2";
+          let address2 = "OREGON, IL 61061-9327";
+          let city = "OREGON";
+          let state = "Alabama";
+          let zip = "61061-9327";
+          zip = zip.split("-")[0];
+          document.getElementById("firstname").value = firstName;
+          document.getElementById("lastname").value = lastName;
+          document.getElementById("address1").value = address;
+          document.getElementById("address2").value = address2;
+
+          document.getElementById("city").value = city;
+          sleep(2000);
+
+          let deliveryState = document.getElementsByName("id_state")[0];
+          document.getElementById("postcode").value = zip;
+
+          if (deliveryState) {
+            for (let i = 0; i < deliveryState.options.length; i++) {
+              console.log("state: ", state);
+              if (deliveryState.options[i].text.includes(state)) {
+                deliveryState.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        } catch (error) {
+          console.log("Problem in diypestcontrol", error);
+        }
+        break;
+      }
+      case "www.pedchem.com": {
+        console.log("at pedchem");
+        sleep(2000);
+        try {
+          let fullName = "John Jensen";
+          let firstName = fullName.split(" ")[0];
+          let lastName = fullName.split(" ")[1];
+          let address = "6603 N IL ROUTE 2";
+          let address2 = "OREGON, IL 61061-9327";
+          let city = "OREGON";
+          let state = "Alabama";
+          let zip = "61061-9327";
+          zip = zip.split("-")[0];
+          document.getElementsByName("firstName")[0].value = firstName;
+          document.getElementsByName("lastName")[0].value = lastName;
+          document.getElementsByName("address1")[0].value = address;
+          document.getElementsByName("address2")[0].value = address2;
+
+          document.getElementsByName("city")[0].value = city;
+
+          let deliveryState = document.getElementsByName("zone")[0];
+          document.getElementsByName("postalCode")[0].value = zip;
+
+          if (deliveryState) {
+            for (let i = 0; i < deliveryState.options.length; i++) {
+              console.log("state: ", state);
+              if (deliveryState.options[i].text.includes(state)) {
+                deliveryState.selectedIndex = i;
+                break;
+              }
+            }
+          }
+        } catch (error) {
+          console.log("Problem in diypestcontrol", error);
+        }
         break;
       }
       default:
@@ -148,6 +318,30 @@ function getStateAbriviaiton(state) {
     {
       name: "Arkansas",
       abbreviation: "AR",
+    },
+    {
+      name: "Armed Forces Africa",
+      abbreviation: "AE",
+    },
+    {
+      name: "Armed Forces Americas",
+      abbreviation: "AA",
+    },
+    {
+      name: "Armed Forces Canada",
+      abbreviation: "AE",
+    },
+    {
+      name: "Armed Forces Europe",
+      abbreviation: "AE",
+    },
+    {
+      name: "Armed Forces Middle East",
+      abbreviation: "AE",
+    },
+    {
+      name: "Armed Forces Pacific",
+      abbreviation: "AP",
     },
     {
       name: "California",
@@ -369,6 +563,11 @@ function getStateAbriviaiton(state) {
   statesArr.forEach((obj) => {
     if (obj.name === state) {
       return obj.abbreviation;
+    }
+  });
+  statesArr.forEach((obj) => {
+    if (obj.abbreviation === state) {
+      return obj.name;
     }
   });
   return state;
