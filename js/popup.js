@@ -1,12 +1,3 @@
-const options = (message) => {
-  return {
-    type: "basic",
-    title: "Data Trans",
-    message: message,
-    iconUrl: "/images/48.png",
-  };
-};
-
 let copy_address = document.getElementById("copy_address");
 if (copy_address) {
   copy_address.addEventListener("click", function (e) {
