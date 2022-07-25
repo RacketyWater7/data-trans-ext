@@ -10,7 +10,10 @@ if (copy_address) {
             messageType: "ACTION_SAVE_ADDRESS",
           },
           (response) => {
-            console.log(response);
+            if (response) {
+              console.log("response", response);
+              chrome.notifications.create(response);
+            }
           }
         );
       });

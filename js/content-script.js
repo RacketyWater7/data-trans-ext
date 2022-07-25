@@ -21,10 +21,6 @@ function options(message) {
   };
 }
 
-window.onload = function () {
-  init();
-};
-
 /**
  * Notes:
  * The most used ones
@@ -49,11 +45,11 @@ window.onload = function () {
 /**
  * check for the pathname and follow up functions execution
  */
-async function init() {
+window.onload = function () {
   try {
-    chrome.runtime.onMessage.addListener((request, sender, a) => {
+    chrome.runtime.onMessage.addListener((request, sender, response) => {
       if (request.messageType == "ACTION_SAVE_ADDRESS") {
-        saveOrderAddress();
+        saveOrderAddress(response);
       }
     });
 
@@ -309,12 +305,13 @@ async function init() {
     console.log(desc);
   }
   // }
-}
+};
 
 /**
  * This function saves the order address
+ * @param {object} response - The response object
  */
-const saveOrderAddress = async () => {
+const saveOrderAddress = async (response) => {
   let { hostname } = window.location;
   switch (hostname) {
     case "seller.walmart.com": {
@@ -344,9 +341,7 @@ const saveOrderAddress = async () => {
           },
           function () {
             console.log("Wallmart address is saved");
-            chrome.notifications.create(
-              options("Wallmart Address saved successfully")
-            );
+            a(options("Wallmart Address saved successfully"));
           }
         );
       } catch (error) {
@@ -396,9 +391,8 @@ const saveOrderAddress = async () => {
           },
           function () {
             console.log("Amazon address is saved");
-            chrome.notifications.create(
-              options("Amazon Address saved successfully")
-            );
+
+            a(options("Amazon Address saved successfully"));
           }
         );
       } catch (error) {
@@ -461,9 +455,8 @@ const saveOrderAddress = async () => {
           },
           function () {
             console.log("Woocommerce address is saved");
-            chrome.notifications.create(
-              options("Woocommerce Address saved successfully")
-            );
+
+            a(options("Woocommerce Address saved successfully"));
           }
         );
       } catch (error) {
@@ -472,7 +465,15 @@ const saveOrderAddress = async () => {
       break;
     }
     default: {
-      chrome.notifications.create(options("Invalid website address"));
+      chrome.runtime.sendMessage(
+        {
+          data: options("Invalid website address"),
+          type: "SHOW_INVALID_WEBSITE_ALERT",
+        },
+        function (response) {
+          console.log(response);
+        }
+      );
     }
   }
 };
