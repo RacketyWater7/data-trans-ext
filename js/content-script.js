@@ -48,8 +48,18 @@ function options(message) {
 window.onload = function () {
   try {
     chrome.runtime.onMessage.addListener((request, sender, response) => {
-      if (request.messageType == "ACTION_SAVE_ADDRESS") {
-        saveOrderAddress(response);
+      switch (request.messageType) {
+        case "ACTION_SAVE_ADDRESS": {
+          saveOrderAddress();
+          break;
+        }
+        case "ACTION_WMART_TO_DIYPEST": {
+          console.log("ACTION_WMART_TO_DIYPEST");
+          pasteToDiypest("walmart_address");
+          break;
+        }
+        default:
+          return false;
       }
     });
 
@@ -62,7 +72,7 @@ window.onload = function () {
     //     //   }
     //     // });
     //     await sleep(2000);
-    //     console.log("at wallmart");
+    //     console.log("at walmart");
     //     let addressClass = document.getElementsByClassName("G42Nv")[1];
     //     let fullName = addressClass.firstChild.innerText;
     //     let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
@@ -186,40 +196,7 @@ window.onload = function () {
     //   }
     //   case "diypestcontrol.com": {
     //     console.log("at diypestcontrol");
-    //     sleep(2000);
-    //     try {
-    //       let fullName = "John Jensen";
-    //       let firstName = fullName.split(" ")[0];
-    //       let lastName = fullName.split(" ")[1];
-    //       let address = "6603 N IL ROUTE 2";
-    //       let address2 = "OREGON, IL 61061-9327";
-    //       let city = "OREGON";
-    //       let state = "Armed Forces Canada";
-    //       let zip = "61061-9327";
-    //       zip = zip.split("-")[0];
-    //       document.getElementById("firstname").value = firstName;
-    //       document.getElementById("lastname").value = lastName;
-    //       document.getElementById("street_1").value = address;
-    //       document.getElementById("street_2").value = address2;
-
-    //       document.getElementById("city").value = city;
-    //       sleep(2000);
-
-    //       let deliveryState = document.getElementsByName("region_id")[0];
-    //       document.getElementById("zip").value = zip;
-
-    //       if (deliveryState) {
-    //         for (let i = 0; i < deliveryState.options.length; i++) {
-    //           console.log("state: ", state);
-    //           if (deliveryState.options[i].text.includes(state)) {
-    //             deliveryState.selectedIndex = i;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     } catch (error) {
-    //       console.log("Problem in diypestcontrol", error);
-    //     }
+    //
     //     break;
     //   }
     //   case "www.pestrong.com": {
@@ -308,42 +285,102 @@ window.onload = function () {
 };
 
 /**
- * This function saves the order address
- * @param {object} response - The response object
+ * This function pastes the address on diypestcontrol.com
+ * @param {string} storageName
  */
-const saveOrderAddress = async (response) => {
+const pasteToDiypest = async (storageName) => {
+  try {
+    await sleep(1000);
+    try {
+      chrome.storage.sync.get(storageName, (result) => {
+        let data;
+        data = result[storageName];
+        console.log("inside data: ", data, "result: ", result);
+        let fullName = data.fullName;
+        let firstName = fullName.split(" ")[0];
+        let lastName = fullName.split(" ")[1];
+        let address = data.address;
+        let address2 = data.address2 ? data.address2 : "";
+        let city = data.city;
+        let state = getStateAbriviaiton(data.state);
+        console.log("new state: ", state);
+        let zip = data.zip;
+        // zip = zip.split("-")[0];
+        document.getElementById("firstname").value = firstName;
+        document.getElementById("lastname").value = lastName;
+        document.getElementById("street_1").value = address;
+        document.getElementById("street_2").value = address2;
+
+        document.getElementById("city").value = city;
+        let deliveryState = document.getElementsByName("region_id")[0];
+        document.getElementById("zip").value = zip;
+
+        if (deliveryState) {
+          for (let i = 0; i < deliveryState.options.length; i++) {
+            console.log("state: ", state);
+            if (deliveryState.options[i].text.includes(state)) {
+              deliveryState.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.log("Problem in diypestcontrol", error);
+    }
+  } catch (err) {
+    let desc = `${err.toString()} in pasteToDiyPest() in Content Script`;
+    console.log(desc);
+  }
+};
+/**
+ * This function saves the order address
+ */
+const saveOrderAddress = async () => {
   let { hostname } = window.location;
   switch (hostname) {
     case "seller.walmart.com": {
       await sleep(1000);
       try {
-        console.log("copying wallmart address");
+        console.log("copying walmart address");
         let addressClass = document.getElementsByClassName("G42Nv")[1];
         let fullName = addressClass.firstChild.innerText;
         let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
         fullAddress = fullAddress.split(",");
         // 221 Fairlamb Ave, Havertown, PA, 19083, USA
         let address = fullAddress[0];
-        let city = fullAddress[1];
-        let state = fullAddress[2];
-        let zip = fullAddress[3];
+        let city = fullAddress[fullAddress.length - 4].split(" ")[1];
+        let state = fullAddress[fullAddress.length - 3].split(" ")[1];
+        let zip = fullAddress[fullAddress.length - 2].split(" ")[1];
 
-        const wallmart_address = {
+        const walmart_address = {
           fullName,
           address,
           city,
           state,
           zip,
         };
-        chrome.storage.sync.set(
-          {
-            wallmart_address: wallmart_address,
-          },
-          function () {
-            console.log("Wallmart address is saved");
-            a(options("Wallmart Address saved successfully"));
-          }
-        );
+        console.log("walmart_address: ", walmart_address);
+        try {
+          chrome.storage.sync.set(
+            {
+              walmart_address: walmart_address,
+            },
+            function () {
+              console.log("Walmart address is saved");
+              chrome.runtime.sendMessage({
+                data: options("Walmart address is saved successfully"),
+                type: "SHOW_NOTIFICATION",
+              });
+            }
+          );
+        } catch (err) {
+          console.log("Error in saving walmart address", err);
+          chrome.runtime.sendMessage({
+            data: options("Error in saving walmart address"),
+            type: "SHOW_NOTIFICATION",
+          });
+        }
       } catch (error) {
         console.log("error while saving walmart address: ", error);
       }
@@ -385,16 +422,27 @@ const saveOrderAddress = async (response) => {
           state,
           zip,
         };
-        chrome.storage.sync.set(
-          {
-            amazon_address: amazon_address,
-          },
-          function () {
-            console.log("Amazon address is saved");
-
-            a(options("Amazon Address saved successfully"));
-          }
-        );
+        console.log("amazon_address: ", amazon_address);
+        try {
+          chrome.storage.sync.set(
+            {
+              amazon_address: amazon_address,
+            },
+            function () {
+              console.log("Amazon address is saved");
+              chrome.runtime.sendMessage({
+                data: options("Amazon address is saved successfully"),
+                type: "SHOW_NOTIFICATION",
+              });
+            }
+          );
+        } catch (err) {
+          console.log("Error in saving amazon address", err);
+          chrome.runtime.sendMessage({
+            data: options("Error in saving amazon address"),
+            type: "SHOW_NOTIFICATION",
+          });
+        }
       } catch (error) {
         console.log("error while saving amazon address: ", error);
       }
@@ -448,17 +496,28 @@ const saveOrderAddress = async (response) => {
             zip,
           };
         }
+        console.log("woocommerce_address: ", woocommerce_address);
 
-        chrome.storage.sync.set(
-          {
-            woocommerce_address: woocommerce_address,
-          },
-          function () {
-            console.log("Woocommerce address is saved");
-
-            a(options("Woocommerce Address saved successfully"));
-          }
-        );
+        try {
+          chrome.storage.sync.set(
+            {
+              woocommerce_address: woocommerce_address,
+            },
+            function () {
+              console.log("Woocommerce address is saved");
+              chrome.runtime.sendMessage({
+                data: options("Woocommerce address is saved successfully"),
+                type: "SHOW_NOTIFICATION",
+              });
+            }
+          );
+        } catch (err) {
+          console.log("Error in saving woocommerce address", err);
+          chrome.runtime.sendMessage({
+            data: options("Error in saving woocommerce address"),
+            type: "SHOW_NOTIFICATION",
+          });
+        }
       } catch (error) {
         console.log("error in saving pestControl address", error);
       }
@@ -468,7 +527,7 @@ const saveOrderAddress = async (response) => {
       chrome.runtime.sendMessage(
         {
           data: options("Invalid website address"),
-          type: "SHOW_INVALID_WEBSITE_ALERT",
+          type: "SHOW_NOTIFICATION",
         },
         function (response) {
           console.log(response);
@@ -741,15 +800,25 @@ function getStateAbriviaiton(state) {
       abbreviation: "WY",
     },
   ];
-  statesArr.forEach((obj) => {
-    if (obj.name === state) {
-      return obj.abbreviation;
-    }
-  });
+
+  let nam;
   statesArr.forEach((obj) => {
     if (obj.abbreviation === state) {
+      nam = obj.name;
       return obj.name;
     }
   });
-  return state;
+  let abbr;
+  statesArr.forEach((obj) => {
+    if (obj.name === state) {
+      abbr = obj.abbreviation;
+      return obj.abbreviation;
+    }
+  });
+  if (nam) {
+    return nam;
+  }
+  if (abbr) {
+    return abbr;
+  }
 }
