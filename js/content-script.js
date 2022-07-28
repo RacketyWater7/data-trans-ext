@@ -113,6 +113,21 @@ window.onload = function () {
           pasteToPedChem("woocommerce_address");
           break;
         }
+        case "ACTION_WMART_TO_PIRATESHIP": {
+          console.log("ACTION_WMART_TO_PIRATESHIP");
+          pasteToPirateship("walmart_address");
+          break;
+        }
+        case "ACTION_AMZ_TO_PIRATESHIP": {
+          console.log("ACTION_AMZ_TO_PIRATESHIP");
+          pasteToPirateship("amazon_address");
+          break;
+        }
+        case "ACTION_WOOC_TO_PIRATESHIP": {
+          console.log("ACTION_WOOC_TO_PIRATESHIP");
+          pasteToPirateship("woocommerce_address");
+          break;
+        }
 
         default:
           return false;
@@ -496,6 +511,42 @@ const pasteToPedChem = async (storageName) => {
     }
   } catch (err) {
     let desc = `${err.toString()} in pasteToPedchem() in Content Script`;
+    console.log(desc);
+  }
+};
+/**
+ * This function pastes the address on pedchem
+ * @param {string} storageName
+ */
+const pasteToPirateship = async (storageName) => {
+  try {
+    await sleep(1000);
+    try {
+      chrome.storage.sync.get(storageName, (result) => {
+        let data;
+        data = result[storageName];
+        console.log("inside data: ", data, "result: ", result);
+        let fullName = data.fullName;
+
+        let address = data.address;
+        let address2 = data.address2 ? data.address2 : "";
+        let city = data.city;
+        let state = getStateAbriviaiton(data.state);
+        console.log("new state: ", state);
+        let zip = data.zip;
+        document.getElementById("shipment-full-name").value = fullName;
+        document.getElementById("shipment-address1").value = address;
+        document.getElementById("shipment-address2").value = address2;
+        document.getElementById("shipment-city").value = city;
+
+        document.getElementById("shipment-zip").value = zip;
+        document.getElementById("shipment-region-id").value = state;
+      });
+    } catch (error) {
+      console.log("Problem in pirateship", error);
+    }
+  } catch (err) {
+    let desc = `${err.toString()} in pasteToPirateship() in Content Script`;
     console.log(desc);
   }
 };
