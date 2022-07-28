@@ -58,6 +58,62 @@ window.onload = function () {
           pasteToDiypest("walmart_address");
           break;
         }
+        case "ACTION_AMZ_TO_DIYPEST": {
+          console.log("ACTION_AMZ_TO_DIYPEST");
+          pasteToDiypest("amazon_address");
+          break;
+        }
+        case "ACTION_WOOC_TO_DIYPEST": {
+          console.log("ACTION_WOOC_TO_DIYPEST");
+          pasteToDiypest("woocommerce_address");
+          break;
+        }
+        case "ACTION_WMART_TO_DORSHIP": {
+          console.log("ACTION_WMART_TO_DORSHIP");
+          pasteToDorShip("walmart_address");
+          break;
+        }
+        case "ACTION_AMZ_TO_DORSHIP": {
+          console.log("ACTION_AMZ_TO_DORSHIP");
+          pasteToDorShip("amazon_address");
+          break;
+        }
+        case "ACTION_WOOC_TO_DORSHIP": {
+          console.log("ACTION_WOOC_TO_DORSHIP");
+          pasteToDorShip("woocommerce_address");
+          break;
+        }
+        case "ACTION_WMART_TO_PESTRONG": {
+          console.log("ACTION_WMART_TO_PESTRONG");
+          pasteToPestStrong("walmart_address");
+          break;
+        }
+        case "ACTION_AMZ_TO_PESTRONG": {
+          console.log("ACTION_AMZ_TO_PESTRONG");
+          pasteToPestStrong("amazon_address");
+          break;
+        }
+        case "ACTION_WOOC_TO_PESTRONG": {
+          console.log("ACTION_WOOC_TO_PESTRONG");
+          pasteToPestStrong("woocommerce_address");
+          break;
+        }
+        case "ACTION_WMART_TO_PEDCHEM": {
+          console.log("ACTION_WMART_TO_PEDCHEM");
+          pasteToPedChem("walmart_address");
+          break;
+        }
+        case "ACTION_AMZ_TO_PEDCHEM": {
+          console.log("ACTION_AMZ_TO_PEDCHEM");
+          pasteToPedChem("amazon_address");
+          break;
+        }
+        case "ACTION_WOOC_TO_PEDCHEM": {
+          console.log("ACTION_WOOC_TO_PEDCHEM");
+          pasteToPedChem("woocommerce_address");
+          break;
+        }
+
         default:
           return false;
       }
@@ -283,6 +339,166 @@ window.onload = function () {
   }
   // }
 };
+/**
+ * This function pastes the address on dorship
+ * @param {string} storageName
+ */
+const pasteToDorShip = async (storageName) => {
+  try {
+    await sleep(1000);
+    try {
+      chrome.storage.sync.get(storageName, (result) => {
+        let data;
+        data = result[storageName];
+        console.log("inside data: ", data, "result: ", result);
+        let fullName = data.fullName;
+        let address = data.address;
+        let address2 = data.address2 ? data.address2 : "";
+        let city = data.city;
+        let state = getStateAbriviaiton(data.state);
+        let zip = data.zip;
+        document.getElementsByName("delivery_name")[0].value = fullName;
+        document.getElementsByName("delivery_street_address")[0].value =
+          address;
+        document.getElementsByName("delivery_street_address_2")[0].value =
+          address2;
+
+        document.getElementsByName("delivery_city")[0].value = city;
+        let deliveryState = document.getElementsByName("delivery_state")[0];
+        document.getElementsByName("delivery_postcode")[0].value = zip;
+
+        if (deliveryState) {
+          for (let i = 0; i < deliveryState.options.length; i++) {
+            if (deliveryState.options[i].text.includes(state)) {
+              deliveryState.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.log("Problem in dorship", error);
+    }
+  } catch (err) {
+    let desc = `${err.toString()} in pasteToDorShip() in Content Script`;
+    console.log(desc);
+  }
+};
+/**
+ * This function pastes the address on pestrong
+ * @param {string} storageName
+ */
+const pasteToPestStrong = async (storageName) => {
+  try {
+    await sleep(1000);
+    try {
+      chrome.storage.sync.get(storageName, (result) => {
+        let data;
+        data = result[storageName];
+        console.log("inside data: ", data, "result: ", result);
+        let fullName = data.fullName;
+        fullName = fullName.split(" ");
+        console.log("fullName: ", fullName);
+        let firstName, lastName;
+        if (fullName.length > 2) {
+          firstName = fullName[0];
+          lastName = fullName[1] + " " + fullName[2];
+        } else {
+          firstName = fullName[0];
+          lastName = fullName[1];
+        }
+        let address = data.address;
+        let address2 = data.address2 ? data.address2 : "";
+        let city = data.city;
+        let state = getStateAbriviaiton(data.state);
+        let zip = data.zip;
+        document.getElementById("firstname").value = firstName;
+        document.getElementById("lastname").value = lastName;
+        document.getElementById("address1").value = address;
+        document.getElementById("address2").value = address2;
+
+        document.getElementById("city").value = city;
+        sleep(2000);
+
+        let deliveryState = document.getElementsByName("id_state")[0];
+        document.getElementById("postcode").value = zip;
+
+        if (deliveryState) {
+          for (let i = 0; i < deliveryState.options.length; i++) {
+            console.log("state: ", state);
+            if (deliveryState.options[i].text.includes(state)) {
+              deliveryState.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.log("Problem in pestrong", error);
+    }
+  } catch (err) {
+    let desc = `${err.toString()} in pasteToPestStrong() in Content Script`;
+    console.log(desc);
+  }
+};
+/**
+ * This function pastes the address on pedchem
+ * @param {string} storageName
+ */
+const pasteToPedChem = async (storageName) => {
+  try {
+    await sleep(1000);
+    try {
+      chrome.storage.sync.get(storageName, (result) => {
+        let data;
+        data = result[storageName];
+        console.log("inside data: ", data, "result: ", result);
+        let fullName = data.fullName;
+        fullName = fullName.split(" ");
+        console.log("fullName: ", fullName);
+        let firstName, lastName;
+        if (fullName.length > 2) {
+          firstName = fullName[0];
+          lastName = fullName[1] + " " + fullName[2];
+        } else {
+          firstName = fullName[0];
+          lastName = fullName[1];
+        }
+
+        let address = data.address;
+        let address2 = data.address2 ? data.address2 : "";
+        let city = data.city;
+        let state = getStateAbriviaiton(data.state);
+        console.log("new state: ", state);
+        let zip = data.zip;
+        document.getElementsByName("firstName")[0].value = firstName;
+        document.getElementsByName("lastName")[0].value = lastName;
+        document.getElementsByName("address1")[0].value = address;
+        document.getElementsByName("address2")[0].value = address2;
+
+        document.getElementsByName("city")[0].value = city;
+
+        let deliveryState = document.getElementsByName("zone")[0];
+        document.getElementsByName("postalCode")[0].value = zip;
+
+        if (deliveryState) {
+          for (let i = 0; i < deliveryState.options.length; i++) {
+            console.log("state: ", state);
+            if (deliveryState.options[i].text.includes(state)) {
+              deliveryState.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.log("Problem in pedchem", error);
+    }
+  } catch (err) {
+    let desc = `${err.toString()} in pasteToPedchem() in Content Script`;
+    console.log(desc);
+  }
+};
 
 /**
  * This function pastes the address on diypestcontrol.com
@@ -297,8 +513,17 @@ const pasteToDiypest = async (storageName) => {
         data = result[storageName];
         console.log("inside data: ", data, "result: ", result);
         let fullName = data.fullName;
-        let firstName = fullName.split(" ")[0];
-        let lastName = fullName.split(" ")[1];
+        fullName = fullName.split(" ");
+        console.log("fullName: ", fullName);
+        let firstName, lastName;
+        if (fullName.length > 2) {
+          firstName = fullName[0];
+          lastName = fullName[1] + " " + fullName[2];
+        } else {
+          firstName = fullName[0];
+          lastName = fullName[1];
+        }
+
         let address = data.address;
         let address2 = data.address2 ? data.address2 : "";
         let city = data.city;
