@@ -47,6 +47,74 @@ function options(message) {
  */
 window.onload = function () {
   try {
+    function doc_keyUp(e) {
+      if (e.altKey && e.key === "s") {
+        console.log("ctrl+down arrow");
+        saveOrderAddress();
+      }
+      if (e.altKey && e.key === "1") {
+        console.log("ctrl+1");
+        pasteToDiypest("walmart_address");
+      }
+      if (e.altKey && e.key === "2") {
+        console.log("ctrl+2");
+        pasteToDiypest("amazon_address");
+      }
+      if (e.altKey && e.key === "3") {
+        console.log("ctrl+3");
+        pasteToDiypest("woocommerce_address");
+      }
+      if (e.altKey && e.key === "4") {
+        console.log("ctrl+4");
+        pasteToDorShip("walmart_address");
+      }
+      if (e.altKey && e.key === "5") {
+        console.log("cltrl+5");
+        pasteToDorShip("amazon_address");
+      }
+      if (e.altKey && e.key === "6") {
+        console.log("ctrl+6");
+        pasteToDorShip("woocommerce_address");
+      }
+      if (e.altKey && e.key === "7") {
+        console.log("ctrl+7");
+        pasteToPestStrong("walmart_address");
+      }
+      if (e.altKey && e.key === "8") {
+        console.log("ctrl+8");
+        pasteToPestStrong("amazon_address");
+      }
+      if (e.altKey && e.key === "9") {
+        console.log("ctrl+9");
+        pasteToPestStrong("woocommerce_address");
+      }
+      if (e.altKey && e.key === "r") {
+        console.log("ctrl+r");
+        pasteToPedChem("walmart_address");
+      }
+      if (e.altKey && e.key === "t") {
+        console.log("ctrl+t");
+        pasteToPedChem("amazon_address");
+      }
+      if (e.altKey && e.key === "y") {
+        console.log("ctrl+y");
+        pasteToPedChem("woocommerce_address");
+      }
+      if (e.altKey && e.key === "u") {
+        console.log("alt+u");
+        pasteToPirateship("walmart_address");
+      }
+      if (e.altKey && e.key === "i") {
+        console.log("alt+i");
+        pasteToPirateship("amazon_address");
+      }
+      if (e.altKey && e.key === "o") {
+        console.log("alt+o");
+        pasteToPirateship("woocommerce_address");
+      }
+    }
+    // register the handler
+    document.addEventListener("keyup", doc_keyUp, false);
     chrome.runtime.onMessage.addListener((request, sender, response) => {
       switch (request.messageType) {
         case "ACTION_SAVE_ADDRESS": {
@@ -133,221 +201,6 @@ window.onload = function () {
           return false;
       }
     });
-
-    // let { hostname } = window.location;
-    // console.log(`host`, hostname);
-    // switch (hostname) {
-    //   case "seller.walmart.com": {
-    //     // chrome.storage.sync.get(["fixedDetails"], function (result) {
-    //     //   if (result && result.fixedDetails) {
-    //     //   }
-    //     // });
-    //     await sleep(2000);
-    //     console.log("at walmart");
-    //     let addressClass = document.getElementsByClassName("G42Nv")[1];
-    //     let fullName = addressClass.firstChild.innerText;
-    //     let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
-    //     console.log("fullName", fullName);
-    //     console.log("fullAddress", fullAddress);
-    //     fullAddress = fullAddress.split(",");
-    //     // 221 Fairlamb Ave, Havertown, PA, 19083, USA
-    //     let address = fullAddress[0];
-    //     let city = fullAddress[1];
-    //     let state = fullAddress[2];
-    //     let zip = fullAddress[3];
-    //     console.log("address", address);
-    //     console.log("City", city);
-    //     console.log("State", state);
-    //     console.log("Zip", zip);
-
-    //     break;
-    //   }
-    //   case "sellercentral.amazon.com": {
-    //     // John Jensen
-    //     // 6603 N IL ROUTE 2
-    //     // OREGON, IL 61061-9327
-    //     console.log("at amazon");
-    //     sleep(2000);
-    //     let fullAddress =
-    //       document.getElementsByClassName("a-normal")[2].innerText;
-    //     fullAddress = fullAddress.split(`\n`);
-    //     let fullName = fullAddress[0];
-    //     let address = fullAddress[1];
-    //     let address2Bundle = fullAddress[2];
-    //     // split numbers and letters in separate arrays
-    //     let zip = address2Bundle.split(/[^0-9]/);
-    //     zip = `${zip[zip.length - 2]}`;
-    //     let state = address2Bundle.split(/[^a-zA-Z]/);
-    //     console.log("preState:", state);
-    //     state = state[2] === "" ? state[3] : state[2];
-    //     address2Bundle = address2Bundle.split(",");
-    //     let city = address2Bundle[0];
-    //     // let state = address2Bundle[1].split(" ")[0];
-    //     // let zip = address2Bundle[1].split(" ")[1];
-    //     console.log("fullName", fullName);
-    //     console.log("address", address);
-    //     console.log("city", city);
-    //     console.log("state", state);
-    //     console.log("zip", zip);
-    //     break;
-    //   }
-    //   case "www.pestcontrolwholesale.com": {
-    //     if (window.location.hostname === "www.pestcontrolwholesale.com") {
-    //       console.log("at pestcontrol");
-    //       sleep(2000);
-
-    //       let fullAddress =
-    //         document.getElementsByClassName("address")[1].innerText;
-
-    //       fullAddress = fullAddress ? fullAddress.split(`\n`) : [];
-    //       console.log("fullAddress", fullAddress);
-    //       let fullName, address2, address, addressBundle;
-    //       if (fullAddress.length === 4) {
-    //         fullName = fullAddress[0];
-    //         address2 = fullAddress[1];
-    //         address = fullAddress[2];
-    //         addressBundle = fullAddress[3];
-    //       } else {
-    //         fullName = fullAddress[0];
-    //         address = fullAddress[1];
-    //         addressBundle = fullAddress[2];
-    //       }
-    //       console.log("addressBundle", addressBundle);
-    //       try {
-    //         let city = addressBundle.split(",")[0];
-
-    //         let state = addressBundle.split(",")[1].split(" ")[1];
-    //         let zip = addressBundle.split(",")[1].split(" ")[2];
-    //         console.log("fullName", fullName);
-    //         console.log("address", address);
-    //         console.log("address2", address2);
-    //         console.log("city", city);
-    //         console.log("state", state);
-    //         console.log("zip", zip);
-    //       } catch (error) {
-    //         console.log("I'm probably on the wrong page");
-    //       }
-    //     }
-
-    //     break;
-    //   }
-    //   case "dropship.domyown.com": {
-    //     console.log("at dropship");
-    //     sleep(2000);
-    //     try {
-    //       let fullName = "John Jensen";
-    //       let address = "6603 N IL ROUTE 2";
-    //       let address2 = "OREGON, IL 61061-9327";
-    //       let city = "OREGON";
-    //       let state = "Illinois";
-    //       let zip = "61061-9327";
-    //       zip = zip.split("-")[0];
-    //       document.getElementsByName("delivery_name")[0].value = fullName;
-    //       document.getElementsByName("delivery_street_address")[0].value =
-    //         address;
-    //       document.getElementsByName("delivery_street_address_2")[0].value =
-    //         address2;
-
-    //       document.getElementsByName("delivery_city")[0].value = city;
-    //       let deliveryState = document.getElementsByName("delivery_state")[0];
-    //       document.getElementsByName("delivery_postcode")[0].value = zip;
-
-    //       if (deliveryState) {
-    //         for (let i = 0; i < deliveryState.options.length; i++) {
-    //           if (deliveryState.options[i].text.includes(state)) {
-    //             deliveryState.selectedIndex = i;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     } catch (error) {
-    //       console.log("Problem in dropship", error);
-    //     }
-    //     break;
-    //   }
-    //   case "diypestcontrol.com": {
-    //     console.log("at diypestcontrol");
-    //
-    //     break;
-    //   }
-    //   case "www.pestrong.com": {
-    //     console.log("at peststrong");
-    //     sleep(2000);
-    //     try {
-    //       let fullName = "John Jensen";
-    //       let firstName = fullName.split(" ")[0];
-    //       let lastName = fullName.split(" ")[1];
-    //       let address = "6603 N IL ROUTE 2";
-    //       let address2 = "OREGON, IL 61061-9327";
-    //       let city = "OREGON";
-    //       let state = "Alabama";
-    //       let zip = "61061-9327";
-    //       zip = zip.split("-")[0];
-    //       document.getElementById("firstname").value = firstName;
-    //       document.getElementById("lastname").value = lastName;
-    //       document.getElementById("address1").value = address;
-    //       document.getElementById("address2").value = address2;
-
-    //       document.getElementById("city").value = city;
-    //       sleep(2000);
-
-    //       let deliveryState = document.getElementsByName("id_state")[0];
-    //       document.getElementById("postcode").value = zip;
-
-    //       if (deliveryState) {
-    //         for (let i = 0; i < deliveryState.options.length; i++) {
-    //           console.log("state: ", state);
-    //           if (deliveryState.options[i].text.includes(state)) {
-    //             deliveryState.selectedIndex = i;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     } catch (error) {
-    //       console.log("Problem in diypestcontrol", error);
-    //     }
-    //     break;
-    //   }
-    //   case "www.pedchem.com": {
-    //     console.log("at pedchem");
-    //     sleep(2000);
-    //     try {
-    //       let fullName = "John Jensen";
-    //       let firstName = fullName.split(" ")[0];
-    //       let lastName = fullName.split(" ")[1];
-    //       let address = "6603 N IL ROUTE 2";
-    //       let address2 = "OREGON, IL 61061-9327";
-    //       let city = "OREGON";
-    //       let state = "Alabama";
-    //       let zip = "61061-9327";
-    //       zip = zip.split("-")[0];
-    //       document.getElementsByName("firstName")[0].value = firstName;
-    //       document.getElementsByName("lastName")[0].value = lastName;
-    //       document.getElementsByName("address1")[0].value = address;
-    //       document.getElementsByName("address2")[0].value = address2;
-
-    //       document.getElementsByName("city")[0].value = city;
-
-    //       let deliveryState = document.getElementsByName("zone")[0];
-    //       document.getElementsByName("postalCode")[0].value = zip;
-
-    //       if (deliveryState) {
-    //         for (let i = 0; i < deliveryState.options.length; i++) {
-    //           console.log("state: ", state);
-    //           if (deliveryState.options[i].text.includes(state)) {
-    //             deliveryState.selectedIndex = i;
-    //             break;
-    //           }
-    //         }
-    //       }
-    //     } catch (error) {
-    //       console.log("Problem in diypestcontrol", error);
-    //     }
-    //     break;
-    //   }
-    //   default:
-    //     return false;
-    // }
   } catch (err) {
     let desc = `${err.toString()} in init() in Content Script`;
     console.log(desc);
