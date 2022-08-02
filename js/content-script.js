@@ -48,7 +48,7 @@ function options(message) {
 window.onload = function () {
   try {
     function doc_keyUp(e) {
-      if (e.altKey && e.key === "s") {
+      if (e.altKey && e.shiftKey && e.key === "S") {
         console.log("ctrl+down arrow");
         saveOrderAddress();
       }
