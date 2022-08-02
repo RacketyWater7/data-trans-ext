@@ -270,13 +270,6 @@ const pasteToPestStrong = async (storageName) => {
         fullName = fullName.split(" ");
         console.log("fullName: ", fullName);
         let firstName, lastName;
-        // if (fullName.length > 2) {
-        //   firstName = fullName[0];
-        //   lastName = fullName[1] + " " + fullName[2];
-        // } else {
-        //   firstName = fullName[0];
-        //   lastName = fullName[1];
-        // }
         if (fullName.length > 2) {
           firstName = fullName[0];
           const getLastName = () => {
@@ -605,18 +598,8 @@ const saveOrderAddress = async () => {
               ? derivedState + " " + state[i]
               : state[i];
         }
-
-        // state = state[2] === "" ? state[3] : state[2];
         address2Bundle = address2Bundle.split(",");
         let city = address2Bundle[0];
-        // let state = address2Bundle[1].split(" ")[0];
-        // let zip = address2Bundle[1].split(" ")[1];
-
-        // console.log("fullName", fullName);
-        // console.log("address", address);
-        // console.log("city", city);
-        // console.log("state", state);
-        // console.log("zip", zip);
         const amazon_address = {
           fullName,
           address,
@@ -674,12 +657,6 @@ const saveOrderAddress = async () => {
 
         let state = addressBundle.split(",")[1].split(" ")[1];
         let zip = addressBundle.split(",")[1].split(" ")[2];
-        // console.log("fullName", fullName);
-        // console.log("address", address);
-        // console.log("address2", address2);
-        // console.log("city", city);
-        // console.log("state", state);
-        // console.log("zip", zip);
         let woocommerce_address;
         if (address2) {
           woocommerce_address = {

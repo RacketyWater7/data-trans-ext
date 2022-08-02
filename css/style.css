@@ -91,13 +91,11 @@ body {
   align-items: center;
   justify-content: center;
   margin-bottom: 30px;
-  /* set some grayish background color */
   /* background-color: #c5d8f7; */
   background-color: #1b2642;
   /* border-radius: 5px 5px 0px 0px; */
 }
 h5 {
-  /* give it primary color of bootstrap */
   color: white;
   font-size: 25px;
   margin-bottom: 40px;

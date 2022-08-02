@@ -8,7 +8,6 @@ if (copy_address) {
           messageType: "ACTION_SAVE_ADDRESS",
         });
       });
-      // window.close();
     } catch (exception) {
       toast.error("Error has occurred. Please refresh page and try again.");
     }
@@ -27,7 +26,6 @@ const pasteData = (elem, msgString) => {
             messageType: `${msgString}`,
           });
         });
-        // window.close();
       } catch (exception) {
         toast.error("Error has occurred. Please refresh page and try again.");
       }
