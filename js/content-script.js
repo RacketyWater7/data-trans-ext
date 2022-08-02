@@ -385,6 +385,8 @@ const pasteToDorShip = async (storageName) => {
         if (deliveryState) {
           for (let i = 0; i < deliveryState.options.length; i++) {
             if (deliveryState.options[i].text.includes(state)) {
+              console.log("state found: ", state);
+
               deliveryState.selectedIndex = i;
               break;
             }
@@ -415,9 +417,23 @@ const pasteToPestStrong = async (storageName) => {
         fullName = fullName.split(" ");
         console.log("fullName: ", fullName);
         let firstName, lastName;
+        // if (fullName.length > 2) {
+        //   firstName = fullName[0];
+        //   lastName = fullName[1] + " " + fullName[2];
+        // } else {
+        //   firstName = fullName[0];
+        //   lastName = fullName[1];
+        // }
         if (fullName.length > 2) {
           firstName = fullName[0];
-          lastName = fullName[1] + " " + fullName[2];
+          const getLastName = () => {
+            let lastN = "";
+            for (let i = 1; i < fullName.length; i++) {
+              lastN += fullName[i] + " ";
+            }
+            return lastN;
+          };
+          lastName = getLastName();
         } else {
           firstName = fullName[0];
           lastName = fullName[1];
@@ -474,7 +490,14 @@ const pasteToPedChem = async (storageName) => {
         let firstName, lastName;
         if (fullName.length > 2) {
           firstName = fullName[0];
-          lastName = fullName[1] + " " + fullName[2];
+          const getLastName = () => {
+            let lastN = "";
+            for (let i = 1; i < fullName.length; i++) {
+              lastN += fullName[i] + " ";
+            }
+            return lastN;
+          };
+          lastName = getLastName();
         } else {
           firstName = fullName[0];
           lastName = fullName[1];
@@ -569,7 +592,14 @@ const pasteToDiypest = async (storageName) => {
         let firstName, lastName;
         if (fullName.length > 2) {
           firstName = fullName[0];
-          lastName = fullName[1] + " " + fullName[2];
+          const getLastName = () => {
+            let lastN = "";
+            for (let i = 1; i < fullName.length; i++) {
+              lastN += fullName[i] + " ";
+            }
+            return lastN;
+          };
+          lastName = getLastName();
         } else {
           firstName = fullName[0];
           lastName = fullName[1];
@@ -623,15 +653,26 @@ const saveOrderAddress = async () => {
         let fullName = addressClass.firstChild.innerText;
         let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
         fullAddress = fullAddress.split(",");
+        let address2 = undefined;
         // 221 Fairlamb Ave, Havertown, PA, 19083, USA
+        // 1290 Morrow Rd, Apt 27, Medford, OR, 97504, USA
+        if (fullAddress.length > 5) {
+          for (let i = 1; i < fullAddress.length - 4; i++) {
+            address2 =
+              address2 !== undefined
+                ? address2 + ", " + fullAddress[i]
+                : fullAddress[i];
+          }
+        }
         let address = fullAddress[0];
-        let city = fullAddress[fullAddress.length - 4].split(" ")[1];
+        let city = fullAddress[fullAddress.length - 4];
         let state = fullAddress[fullAddress.length - 3].split(" ")[1];
         let zip = fullAddress[fullAddress.length - 2].split(" ")[1];
 
         const walmart_address = {
           fullName,
           address,
+          address2,
           city,
           state,
           zip,
@@ -673,14 +714,46 @@ const saveOrderAddress = async () => {
         let fullAddress =
           document.getElementsByClassName("a-normal")[2].innerText;
         fullAddress = fullAddress.split(`\n`);
+        let address2Bundle, address2;
+        if (fullAddress.length >= 7) {
+          address2Bundle = fullAddress[3];
+          address2 = fullAddress[2];
+        } else {
+          address2Bundle = fullAddress[2];
+          address2 = "";
+        }
         let fullName = fullAddress[0];
         let address = fullAddress[1];
-        let address2Bundle = fullAddress[2];
+
         let zip = address2Bundle.split(/[^0-9]/);
-        zip = `${zip[zip.length - 2]}`;
+        if (zip[zip.length - 2] === "") {
+          zip = zip[zip.length - 1];
+        } else {
+          zip = `${zip[zip.length - 2]}`;
+        }
+        console.log("zip: ", zip);
+
         let state = address2Bundle.split(/[^a-zA-Z]/);
+        let derivedState = undefined;
         console.log("preState:", state);
-        state = state[2] === "" ? state[3] : state[2];
+        let stateStartIndex;
+        for (let i = 0; i < state.length; i++) {
+          if (state[i] === "") {
+            stateStartIndex = i + 1;
+            break;
+          }
+        }
+        for (let i = stateStartIndex; i < state.length; i++) {
+          if (state[i] === "") {
+            break;
+          }
+          derivedState =
+            derivedState !== undefined
+              ? derivedState + " " + state[i]
+              : state[i];
+        }
+
+        // state = state[2] === "" ? state[3] : state[2];
         address2Bundle = address2Bundle.split(",");
         let city = address2Bundle[0];
         // let state = address2Bundle[1].split(" ")[0];
@@ -694,8 +767,9 @@ const saveOrderAddress = async () => {
         const amazon_address = {
           fullName,
           address,
+          address2,
           city,
-          state,
+          state: derivedState,
           zip,
         };
         console.log("amazon_address: ", amazon_address);
@@ -1079,16 +1153,16 @@ function getStateAbriviaiton(state) {
 
   let nam;
   statesArr.forEach((obj) => {
-    if (obj.abbreviation === state) {
+    if (obj.abbreviation.toLowerCase() == state.toLowerCase()) {
       nam = obj.name;
       return obj.name;
     }
   });
   let abbr;
   statesArr.forEach((obj) => {
-    if (obj.name === state) {
-      abbr = obj.abbreviation;
-      return obj.abbreviation;
+    if (obj.name.toLowerCase() == state.toLowerCase()) {
+      abbr = obj.name;
+      return obj.name;
     }
   });
   if (nam) {
