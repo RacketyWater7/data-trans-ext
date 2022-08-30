@@ -529,8 +529,9 @@ const saveOrderAddress = async () => {
         //   }
         // }
         let city = cityStateInfo.split(",")[0];
-        let state = cityStateInfo.split(",")[1].split(" ")[0];
-        let zip = cityStateInfo.split(",")[1].split(" ")[1];
+        let brokenInfo = cityStateInfo.split(",")[1].split(" ");
+        let state = brokenInfo[1];
+        let zip = brokenInfo[brokenInfo.length - 1];
 
         const walmart_address = {
           fullName,
