@@ -41,6 +41,16 @@ function options(message) {
  * www.pedchem.com
  * */
 
+// const doc_key =(e)=>{
+//     if(e.ctrlKey &&  e.shiftKey && e.keyCode === 51){
+//         console.log(" ctrl shift 3");
+//     }else{
+//         if(e.shiftKey && e.keyCode === 51){
+//             console.log(" shift 3");
+//         }
+//     }
+// }
+// document.addEventListener("keyup", doc_key, false);
 // Main Function
 /**
  * check for the pathname and follow up functions execution
@@ -48,16 +58,15 @@ function options(message) {
 window.onload = function () {
   try {
     function doc_keyUp(e) {
-      if (e.altKey && e.shiftKey && e.key === "S") {
-        console.log("ctrl+down arrow");
+      if (e.shiftKey && e.key === " ") {
         saveOrderAddress();
       }
       if (e.altKey && e.key === "1") {
         console.log("ctrl+1");
         pasteToDiypest("walmart_address");
       }
-      if (e.altKey && e.key === "2") {
-        console.log("ctrl+2");
+      if (e.shiftKey && e.keyCode === 51) {
+        console.log("shift 3");
         pasteToDiypest("amazon_address");
       }
       if (e.altKey && e.key === "3") {
@@ -68,8 +77,8 @@ window.onload = function () {
         console.log("ctrl+4");
         pasteToDorShip("walmart_address");
       }
-      if (e.altKey && e.key === "5") {
-        console.log("cltrl+5");
+      if (e.shiftKey && e.keyCode === 50) {
+        console.log("shift+2");
         pasteToDorShip("amazon_address");
       }
       if (e.altKey && e.key === "6") {
@@ -80,8 +89,8 @@ window.onload = function () {
         console.log("ctrl+7");
         pasteToPestStrong("walmart_address");
       }
-      if (e.altKey && e.key === "8") {
-        console.log("ctrl+8");
+      if (e.shiftKey && e.keyCode === 52) {
+        console.log("shift+4");
         pasteToPestStrong("amazon_address");
       }
       if (e.altKey && e.key === "9") {
@@ -100,8 +109,8 @@ window.onload = function () {
         console.log("ctrl+y");
         pasteToPedChem("woocommerce_address");
       }
-      if (e.altKey && e.key === "u") {
-        console.log("alt+u");
+      if (e.shiftKey && e.keyCode === 49) {
+        console.log("alt+1");
         pasteToPirateship("walmart_address");
       }
       if (e.altKey && e.key === "i") {
@@ -497,23 +506,31 @@ const saveOrderAddress = async () => {
         console.log("copying walmart address");
         let addressClass = document.getElementsByClassName("G42Nv")[1];
         let fullName = addressClass.firstChild.innerText;
-        let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
-        fullAddress = fullAddress.split(",");
+        let address = addressClass.firstChild.nextElementSibling.innerText;
+        // fullAddress = fullAddress.split(",");
+        let cityStateInfo =
+          addressClass.firstChild.nextElementSibling.nextElementSibling
+            .innerText;
         let address2 = undefined;
+        /**
+         * WalMart Address:
+         * Vivian A. Zajac
+         * 129 Pacific Blvd
+         * Long Beach, NY 11561
+         */
         // 221 Fairlamb Ave, Havertown, PA, 19083, USA
         // 1290 Morrow Rd, Apt 27, Medford, OR, 97504, USA
-        if (fullAddress.length > 5) {
-          for (let i = 1; i < fullAddress.length - 4; i++) {
-            address2 =
-              address2 !== undefined
-                ? address2 + ", " + fullAddress[i]
-                : fullAddress[i];
-          }
-        }
-        let address = fullAddress[0];
-        let city = fullAddress[fullAddress.length - 4];
-        let state = fullAddress[fullAddress.length - 3].split(" ")[1];
-        let zip = fullAddress[fullAddress.length - 2].split(" ")[1];
+        // if (fullAddress.length > 5) {
+        //   for (let i = 1; i < fullAddress.length - 4; i++) {
+        //     address2 =
+        //       address2 !== undefined
+        //         ? address2 + ", " + fullAddress[i]
+        //         : fullAddress[i];
+        //   }
+        // }
+        let city = cityStateInfo.split(",")[0];
+        let state = cityStateInfo.split(",")[1].split(" ")[0];
+        let zip = cityStateInfo.split(",")[1].split(" ")[1];
 
         const walmart_address = {
           fullName,
