@@ -41,6 +41,16 @@ function options(message) {
  * www.pedchem.com
  * */
 
+// const doc_key =(e)=>{
+//     if(e.ctrlKey &&  e.shiftKey && e.keyCode === 51){
+//         console.log(" ctrl shift 3");
+//     }else{
+//         if(e.shiftKey && e.keyCode === 51){
+//             console.log(" shift 3");
+//         }
+//     }
+// }
+// document.addEventListener("keyup", doc_key, false);
 // Main Function
 /**
  * check for the pathname and follow up functions execution
@@ -49,16 +59,15 @@ window.onload = function () {
   try {
     console.log("extension started");
     function doc_keyUp(e) {
-      if (e.altKey && e.shiftKey && e.key === "S") {
-        console.log("ctrl+down arrow");
+      if (e.shiftKey && e.key === " ") {
         saveOrderAddress();
       }
       if (e.altKey && e.key === "1") {
         console.log("ctrl+1");
         pasteToDiypest("walmart_address");
       }
-      if (e.altKey && e.key === "2") {
-        console.log("ctrl+2");
+      if (e.shiftKey && e.keyCode === 51) {
+        console.log("shift 3");
         pasteToDiypest("amazon_address");
       }
       if (e.altKey && e.key === "3") {
@@ -69,8 +78,8 @@ window.onload = function () {
         console.log("ctrl+4");
         pasteToDorShip("walmart_address");
       }
-      if (e.altKey && e.key === "5") {
-        console.log("cltrl+5");
+      if (e.shiftKey && e.keyCode === 50) {
+        console.log("shift+2");
         pasteToDorShip("amazon_address");
       }
       if (e.altKey && e.key === "6") {
@@ -81,8 +90,8 @@ window.onload = function () {
         console.log("ctrl+7");
         pasteToPestStrong("walmart_address");
       }
-      if (e.altKey && e.key === "8") {
-        console.log("ctrl+8");
+      if (e.shiftKey && e.keyCode === 52) {
+        console.log("shift+4");
         pasteToPestStrong("amazon_address");
       }
       if (e.altKey && e.key === "9") {
@@ -101,8 +110,8 @@ window.onload = function () {
         console.log("ctrl+y");
         pasteToPedChem("woocommerce_address");
       }
-      if (e.altKey && e.key === "u") {
-        console.log("alt+u");
+      if (e.shiftKey && e.keyCode === 49) {
+        console.log("alt+1");
         pasteToPirateship("walmart_address");
       }
       if (e.altKey && e.key === "i") {
