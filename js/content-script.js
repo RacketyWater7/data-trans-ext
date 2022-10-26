@@ -47,6 +47,7 @@ function options(message) {
  */
 window.onload = function () {
   try {
+    console.log("extension started");
     function doc_keyUp(e) {
       if (e.altKey && e.shiftKey && e.key === "S") {
         console.log("ctrl+down arrow");
@@ -497,23 +498,31 @@ const saveOrderAddress = async () => {
         console.log("copying walmart address");
         let addressClass = document.getElementsByClassName("G42Nv")[1];
         let fullName = addressClass.firstChild.innerText;
-        let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
-        fullAddress = fullAddress.split(",");
-        let address2 = undefined;
-        // 221 Fairlamb Ave, Havertown, PA, 19083, USA
-        // 1290 Morrow Rd, Apt 27, Medford, OR, 97504, USA
-        if (fullAddress.length > 5) {
-          for (let i = 1; i < fullAddress.length - 4; i++) {
-            address2 =
-              address2 !== undefined
-                ? address2 + ", " + fullAddress[i]
-                : fullAddress[i];
-          }
-        }
-        let address = fullAddress[0];
-        let city = fullAddress[fullAddress.length - 4];
-        let state = fullAddress[fullAddress.length - 3].split(" ")[1];
-        let zip = fullAddress[fullAddress.length - 2].split(" ")[1];
+
+        // let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
+        // fullAddress = fullAddress.split(",");
+        let address2 = "";
+        // // 221 Fairlamb Ave, Havertown, PA, 19083, USA
+        // // 1290 Morrow Rd, Apt 27, Medford, OR, 97504, USA
+        // if (fullAddress.length > 5) {
+        //   for (let i = 1; i < fullAddress.length - 4; i++) {
+        //     address2 =
+        //       address2 !== undefined
+        //         ? address2 + ", " + fullAddress[i]
+        //         : fullAddress[i];
+        //   }
+        // }
+        let address = addressClass.firstChild.nextElementSibling.innerText;
+        let addressBundle =
+          addressClass.firstChild.nextElementSibling.nextElementSibling
+            .innerText;
+        let city = addressBundle.split(",")[0];
+
+        let state = addressBundle.split(",")[1].split(" ")[1];
+        let zip = addressBundle.split(",")[1].split(" ")[2];
+        // let city = fullAddress[fullAddress.length - 4];
+        // let state = fullAddress[fullAddress.length - 3].split(" ")[1];
+        // let zip = fullAddress[fullAddress.length - 2].split(" ")[1];
 
         const walmart_address = {
           fullName,
@@ -642,15 +651,20 @@ const saveOrderAddress = async () => {
 
       fullAddress = fullAddress ? fullAddress.split(`\n`) : [];
       let fullName, address2, address, addressBundle;
-      if (fullAddress.length === 4) {
+      if (fullAddress.length < 4) {
+        fullName = fullAddress[0];
+        address = fullAddress[1];
+        addressBundle = fullAddress[fullAddress.length - 1];
+      } else if (fullAddress.length === 4) {
         fullName = fullAddress[0];
         address2 = fullAddress[1];
         address = fullAddress[2];
         addressBundle = fullAddress[3];
       } else {
         fullName = fullAddress[0];
-        address = fullAddress[1];
-        addressBundle = fullAddress[2];
+        address2 = fullAddress[1];
+        address = fullAddress[2];
+        addressBundle = fullAddress[fullAddress.length - 1];
       }
       try {
         let city = addressBundle.split(",")[0];
