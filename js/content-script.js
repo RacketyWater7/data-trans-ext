@@ -495,7 +495,10 @@ const saveOrderAddress = async () => {
       await sleep(1000);
       try {
         console.log("copying walmart address");
-        let addressClass = document.getElementsByClassName("G42Nv")[1];
+        let addressClass = document.querySelector(
+          "#orders\\@seller-center\\/app-orders-1 > div > div:nth-child(4) > div > div._3BNKk > div._2CFyo > div:nth-child(2) > div:nth-child(2)"
+        ).lastChild.lastChild.lastChild;
+        // let addressClass = document.getElementsByClassName("G42Nv")[1];
         let fullName = addressClass.firstChild.innerText;
         let fullAddress = addressClass.firstChild.nextElementSibling.innerText;
         fullAddress = fullAddress.split(",");
