@@ -505,9 +505,18 @@ const saveOrderAddress = async () => {
       try {
         console.log("copying walmart address");
         // let addressContainer = document.getElementsByClassName("G42Nv")[1];  // old node
-        let addressContainer = document.querySelector(
-          "#orders\\@seller-center\\/app-orders-1 > div > div:nth-child(4) > div > div._3BNKk > div._2CFyo > div:nth-child(2) > div:nth-child(2)"
-        ).lastChild.lastChild.lastChild;
+        const addressCont = document.getElementsByClassName("undefined")[2];
+        let addressContainer = null;
+
+        for (let i = 0; i < addressCont.children.length; i++) {
+          const childNode = addressCont.children[i];
+
+          if (childNode.children.length === 4) {
+            addressContainer = childNode;
+            break;
+          }
+        }
+
         let fullName = addressContainer.firstChild.innerText;
         let address = addressContainer.firstChild.nextElementSibling.innerText;
         // fullAddress = fullAddress.split(",");
